@@ -1,27 +1,37 @@
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.0)
+
+# 子目录下需要构建另一个工程
+project(library_test)
 
 enable_testing()
 
+include(GoogleTest)
+
+# 寻找 googletest 单元测试框架
+find_package(GTest REQUIRED)
+
 # 查找当前目录下的所有源文件
 # 并将名称保存到 DIR_SRCS 变量中
-aux_source_directory(./src TEST_SRCS)
+aux_source_directory(src TEST_SRC_FILE)
 
+# 包含include目录，里面都是头文件
 include_directories(../include)
 
-# 指定生成目标文件
+# 构建生成单元测试可执行文件
 add_executable(
-        library_test
-        ${TEST_SRCS}
+        ${PROJECT_NAME}
+        ${TEST_SRC_FILE}
 )
 
-# 依赖库
+# 指定目标链接的库
 target_link_libraries(
-        library_test
+        ${PROJECT_NAME}
+        PRIVATE
         test_cmake_gtest
-        gtest_main
         gtest
+        gtest_main
         pthread
 )
 
-include(GoogleTest)
-
-gtest_discover_tests(library_test)
+gtest_discover_tests(${PROJECT_NAME})

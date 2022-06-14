@@ -7,17 +7,23 @@ project(test_cmake_gtest)
 # C++版本
 set(CMAKE_CXX_STANDARD 20)
 
+# 设置动态库的输出目录
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+# 设置静态库的输出目录
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-
+# 设置可执行文件的输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-# 查找当前目录下的所有源文件
-# 并将名称保存到 DIR_SRCS 变量中
-aux_source_directory(./src LIB_SRCS)
+# 包含include目录，里面都是头文件
+include_directories(include)
 
-# 指定生成的库文件的名称
-add_library(test_cmake_gtest SHARED ${LIB_SRCS})
+# 将 src 目录下的所有源文件加入后面的变量之中
+aux_source_directory(src DIR_LIB_SRCS)
 
-#
+# 构建生成动态库
+add_library(${PROJECT_NAME} SHARED ${DIR_LIB_SRCS})
+# 构建生成静态库
+# add_library(${PROJECT_NAME}_static STATIC ${DIR_LIB_SRCS})
+
+# 添加子目录
 add_subdirectory(testsuite)
